@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Client Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #clientCount {
+            font-size: 2em;
+            color: blue;
+        }
+        #clientList {
+            font-size: 1.2em;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Client Dashboard</h1>
+    <p>Number of Active Clients:</p>
+    <div id="clientCount">0</div>
+    <p>Connected Clients:</p>
+    <ul id="clientList"></ul>
+
+    <!-- Socket.io client-side library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        // Connect to WebSocket server
+        const socket = io.connect('http://localhost:5000');
+
+        // Listen for client update event
+        socket.on('client_update', data => {
+            // Update client count display
+            document.getElementById("clientCount").textContent = data.count;
+
+            // Update the list of connected clients
+            const clientListElement = document.getElementById("clientList");
+            clientListElement.innerHTML = '';  // Clear the current list
+            data.clients.forEach(client => {
+                const li = document.createElement("li");
+                li.textContent = client;
+                clientListElement.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
